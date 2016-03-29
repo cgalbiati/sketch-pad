@@ -1,6 +1,8 @@
 //  quadrant vs position - store both on sprite?  convert to quadrant from position?
 //how should I be doing tilesize??
+//collision - radius or box
 
+//width and height set by css??
 
 
 // Create the canvas
@@ -11,7 +13,6 @@
 // document.body.appendChild(canvas);
 
 
-var canvas = document.getElementById("canvas");
 
 
 //animates a sprite between two positions
@@ -35,6 +36,12 @@ function posToQuadrant(position, map){
   return [x, y];
 }
 
+function quadrantToPos(quadrant, map){
+  var x = Math.floor(quadrant[0]*map.tilesize[0]);
+  var y = Math.floor(quadrant[1]*map.tilesize[1]);
+  return [x, y];
+}
+
 
 class Board {
   constructor(numCols, numRows, width, height){
@@ -42,7 +49,7 @@ class Board {
     this.quadrantsArr = this.makeQuadrantsArr(numCols, numRows);
     this.tileSize = this.getTileSize(width, height, numCols, numRows);
   }
-  makeQuadrantsArr () {
+  makeQuadrantsArr (numCols, numRows) {
     var board = [];
     for(var i=0; i<numRows; i++){
         board.push([]);
@@ -60,6 +67,7 @@ class Board {
     this.quadrantsArr[pos[0]][pos[1]].push(sprite);
 
     //render on board
+
 
   }
   removeSprite(sprite){
@@ -90,26 +98,58 @@ class Board {
 
 //sprites are objects with methods
 //imgLoc is an obj with keys imgUrl, x, y, width, height
+//options: {
+  //imgUrl
+  //imgx, imgy, img, imgWidth, imgHeight, 
+  //type='Sprite', 
+  //passable=true, 
+  //position=null
+  //quadrant
+//}
 class Sprite {
-  constructor(map, name, imgLoc, type='Sprite', passable=true, position=null){
-    if(!quadrant){
-      if (!position) quadrant = [0, 0];
-      else {
-        var x = Math.floor(position[0]/map.tilesize[0]);
-        var y = Math.floor(position[1]/map.tilesize[1]);
-        quadrant = [x, y];
-      }
-    }
+  constructor(map, name, options){
+    // if(!quadrant){
+    //   if (!position) quadrant = [0, 0];
+    //   else {
+    //     var x = Math.floor(position[0]/map.tilesize[0]);
+    //     var y = Math.floor(position[1]/map.tilesize[1]);
+    //     quadrant = [x, y];
+    //   }
+    // }
     this.name = name;
-    this.position = position;
-    this.type = type;
-    this.passable = passable;
+
+    this.position = options.position || [0,0]
+    if(options.imgUrl) this.imgUrl = options.imgUrl;
+    this.imgX = options.imgX || 0;
+    this.imgY = options.imgY || 0;
+    this.width = options.width ||null;
+    this.height = options.height || null;
+    this.type = options.type || 'Sprite';
+    this.passable = options.passable || true;
     this.map = map;
   }
 
   draw(map, ctx){
     var tileSize = map.tileSize;
-    ctx.drawImage(this.img, this.position[0], this.position[1], tileSize[0], tileSize[1]);
+    var self = this
+    //check what options are actually there
+    var img = new Image();
+    img.src = this.imgUrl;
+    var stuff = document.getElementById('lalala')
+    // stuff.appendChild(img)
+  img.onload = function(){
+      if(!self.height) self.height = img.height;
+      if(!self.width) self.width = img.width;
+      ctx.drawImage(img, self.imgX, self.imgY, self.width, self.height, self.position[0], self.position[1], tileSize[0], tileSize[1]);
+  }
+
+    console.log(this.position)
+
+    ctx.fillStyle = "rgb(200,0,0)";
+        ctx.fillRect (10, 10, 55, 50);
+
+        ctx.fillStyle = "rgba(0, 0, 200, 0.5)";
+        ctx.fillRect (30, 30, 55, 50);
   }
 
   //returns a promise
@@ -133,23 +173,25 @@ class Sprite {
     //test for colisions in each position???
     return true;
   }
-  getQuandrant(map)
 
-}
-
-class Avatar extends Sprite {
-  constructor(){
-    super()
-    this.type = 'Avatar';
+  getQuandrant(map){
+    return true;
   }
 }
 
-class Obstacle extends Sprite {
-  constructor(){
-    super()
-    this.type = 'Obstacle';
-  }
-}
+// class Avatar extends Sprite {
+//   constructor(){
+//     super()
+//     this.type = 'Avatar';
+//   }
+// }
+
+// class Obstacle extends Sprite {
+//   constructor(){
+//     super()
+//     this.type = 'Obstacle';
+//   }
+// }
 
 
 // var arr = [{name:'a'}, 
@@ -185,6 +227,20 @@ class Obstacle extends Sprite {
 // delete obj.f;
 // console.timeEnd('delete');
 
+
+
+document.addEventListener("DOMContentLoaded", function(event) { 
+  var canvas = document.getElementById("canvas");
+  var ctx = canvas.getContext("2d");
+
+  var board = new Board(6, 6, 300, 300);
+
+  var sprite = new Sprite(board, 'me', {position:[200,100], imgUrl:'images/sprites.png', width:50, height: 50, imgX: 100, imgY:100});
+  console.log(canvas)
+  console.log(sprite)
+  sprite.draw(board, ctx)
+
+});
 
 
 
