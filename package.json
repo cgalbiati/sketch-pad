@@ -1,0 +1,39 @@
+{
+  "name": "ridiculously-simple-game-engine",
+  "version": "1.0.0",
+  "description": "a ridiculously simple game engine",
+  "main": "main.js",
+  "scripts": {
+    "start": "node_modules/webpack-dev-server/bin/webpack-dev-server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cgalbiati/game-engine.git"
+  },
+  "keywords": [
+    "canvas",
+    "javascript",
+    "game-engine"
+  ],
+  "author": "Chandra Galbiati",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cgalbiati/game-engine/issues"
+  },
+  "homepage": "https://github.com/cgalbiati/game-engine#readme",
+  "dependencies": {
+    "babel-polyfill": "^6.7.4",
+    "babel-preset-es2015": "^6.6.0",
+    "babel-register": "^6.7.2",
+    "bluebird": "^3.3.4",
+    "redux": "^3.3.1",
+    "redux-thunk": "^2.0.1",
+    "webpack": "^1.12.14",
+    "webpack-dev-server": "^1.14.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.7.4",
+    "babel-loader": "^6.2.4"
+  }
+}
